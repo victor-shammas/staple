@@ -1,0 +1,68 @@
+/* E-reader stylesheet. Kept light so readers' own font/size settings win. */
+
+body { margin: 0 4%; line-height: 1.5; }
+
+.cover-image { text-align: center; margin: 0; padding: 0; }
+.cover-image img { max-width: 100%; max-height: 100%; }
+
+/* Title page */
+.cover { margin-top: 18%; }
+.cover-kicker { font-family: sans-serif; font-size: .75em; letter-spacing: .18em; text-transform: uppercase; color: #8a3b12; margin: 0 0 2em; }
+.cover-title { font-size: 2em; line-height: 1.15; margin: 0 0 .3em; }
+.cover-range { font-style: italic; margin: 0 0 .3em; color: #555; }
+.cover-stats { font-family: sans-serif; font-size: .8em; color: #555; margin: 0 0 2em; padding-bottom: 1.5em; border-bottom: 1px solid #ccc; }
+.cover-colophon { font-family: sans-serif; font-size: .75em; color: #666; }
+
+/* Contents */
+.toc h2 { font-family: sans-serif; font-size: .8em; letter-spacing: .18em; text-transform: uppercase; color: #8a3b12; margin: 0 0 1.5em; }
+.toc ol { padding-left: 1.6em; margin: 0; }
+.toc li { margin: 0 0 .9em; }
+.toc a { text-decoration: none; color: inherit; }
+.toc-title { display: block; font-weight: bold; line-height: 1.3; }
+.toc-meta { display: block; font-family: sans-serif; font-size: .75em; color: #666; }
+
+/* Article header */
+.post-header { margin: 0 0 2em; padding-bottom: 1em; border-bottom: 1px solid #ccc; }
+.post-pub { font-family: sans-serif; font-size: .72em; letter-spacing: .14em; text-transform: uppercase; color: #8a3b12; margin: 0 0 .8em; }
+.post-title { font-size: 1.7em; line-height: 1.15; margin: 0 0 .3em; }
+.post-subtitle { font-style: italic; font-size: 1.1em; margin: 0 0 .8em; color: #444; }
+.post-byline { font-family: sans-serif; font-size: .8em; color: #666; margin: 0; }
+.post-source { font-family: sans-serif; font-size: .7em; margin: .2em 0 0; word-break: break-all; }
+.post-source a { color: #666; }
+.preview-note { font-family: sans-serif; font-size: .8em; color: #8a3b12; margin: 1em 0 0; }
+
+/* Body */
+.post-body p { margin: 0 0 .8em; }
+.post-body h1, .post-body h2, .post-body h3, .post-body h4 { line-height: 1.25; margin: 1.5em 0 .5em; page-break-after: avoid; }
+.post-body h1 { font-size: 1.35em; }
+.post-body h2 { font-size: 1.25em; }
+.post-body h3 { font-size: 1.1em; }
+.post-body h4 { font-size: 1em; }
+.post-body blockquote { margin: 1em 0; padding: 0 0 0 1em; border-left: 2px solid #ccc; }
+.post-body hr { border: 0; border-top: 1px solid #ccc; width: 30%; margin: 1.5em auto; }
+.post-body pre, .post-body code { font-family: monospace; font-size: .85em; }
+.post-body pre { white-space: pre-wrap; }
+.post-body table { border-collapse: collapse; font-size: .85em; }
+.post-body th, .post-body td { border-bottom: 1px solid #ccc; padding: .3em .5em; text-align: left; }
+
+.post-body figure, .post-body .captioned-image-container { margin: 1.2em 0; text-align: center; page-break-inside: avoid; }
+.post-body img { max-width: 100%; height: auto; }
+.post-body figcaption, .post-body .image-caption { font-family: sans-serif; font-size: .75em; color: #666; margin-top: .5em; }
+
+.post-body .embed-tweet p:first-child { white-space: pre-line; }
+.post-body .embed-cite { font-family: sans-serif; font-size: .75em; color: #666; }
+.post-body .embed-media, .post-body .embed-post, .post-body .embed-link { font-family: sans-serif; font-size: .8em; color: #555; border: 1px solid #ccc; padding: .5em .7em; }
+.post-body .embed-label { color: #8a3b12; }
+
+.post-body .footnote-anchor { font-size: .7em; vertical-align: super; line-height: 0; text-decoration: none; }
+.post-body .footnote { font-size: .85em; margin: 0 0 .5em; }
+.post-body .footnote-number { float: left; width: 1.6em; text-decoration: none; font-weight: bold; }
+.post-body .footnote-content { margin-left: 1.8em; }
+.post-body .footnote-content p { margin: 0 0 .3em; }
+
+/* Support the writers */
+.post-footer { margin-top: 2em; padding-top: .8em; border-top: 1px solid #ccc; font-family: sans-serif; font-size: .75em; color: #666; }
+.post-footer p { margin: 0; }
+.afterword { margin-top: 10%; }
+.afterword h2 { font-family: sans-serif; font-size: .8em; letter-spacing: .18em; text-transform: uppercase; color: #8a3b12; margin: 0 0 1.5em; }
+.afterword p { margin: 0 0 1em; }

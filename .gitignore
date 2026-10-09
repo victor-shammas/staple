@@ -1,0 +1,7 @@
+# The website is its own public repo (victor-shammas/staple), checked out here.
+site/
+
+# Build output — attached to GitHub releases and uploaded to the Chrome Web Store.
+store/*.zip
+
+.DS_Store

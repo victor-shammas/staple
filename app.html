@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Staple</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="masthead">
+    <h1>Staple</h1>
+    <p>Staple a week of Substack essays into one PDF, EPUB or HTML — free posts, plus any paid ones you subscribe to.</p>
+  </header>
+
+  <p id="rate-notice" class="rate-banner" role="status" hidden></p>
+
+  <main>
+    <section class="card" aria-labelledby="sources-h">
+      <div class="card-head">
+        <h2 id="sources-h"><span class="step">1</span>Publications</h2>
+        <button id="import" class="secondary">Import my subscriptions</button>
+      </div>
+      <p id="import-status" class="status" role="status"></p>
+
+      <div id="groups" class="groups" hidden>
+        <div id="group-chips" class="group-chips" role="group" aria-label="Groups"></div>
+        <div id="group-actions" class="group-actions"></div>
+        <form id="group-form" class="group-form" hidden>
+          <p id="group-hint" class="muted"></p>
+          <div class="group-form-row">
+            <input id="group-name" type="text" maxlength="40" placeholder="Group name — e.g. AI, Politics, Culture" aria-label="Group name">
+            <button type="submit" class="secondary" id="group-save">Save group</button>
+            <button type="button" class="link" id="group-cancel">Cancel</button>
+          </div>
+          <p id="group-error" class="status error"></p>
+        </form>
+      </div>
+
+      <div id="sources-tools" class="list-tools" hidden>
+        <input id="sources-filter" type="search" placeholder="Filter publications" aria-label="Filter publications">
+        <label class="check small"><input id="selected-only" type="checkbox"> Selected only</label>
+        <span id="sources-count" class="muted"></span>
+        <button class="link" id="sources-all">All</button>
+        <button class="link" id="sources-none">None</button>
+      </div>
+      <ul id="sources" class="sources"></ul>
+
+      <form id="add-form" class="add-row">
+        <input id="add-input" type="text" placeholder="Add by URL — e.g. thezvi.substack.com or theorybrief.com" aria-label="Publication URL" autocomplete="off" spellcheck="false">
+        <button type="submit" class="secondary">Add</button>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="filter-h">
+      <h2 id="filter-h"><span class="step">2</span>Which posts</h2>
+      <div class="grid">
+        <label>From <input id="from" type="date"></label>
+        <label>To <input id="to" type="date"></label>
+        <div class="quick" role="group" aria-label="Quick ranges">
+          <button class="chip" data-days="7">Last 7 days</button>
+          <button class="chip" data-days="14">14 days</button>
+          <button class="chip" data-days="30">30 days</button>
+        </div>
+      </div>
+      <div class="grid">
+        <label>At least <input id="min-words" type="number" min="0" step="100" class="narrow"> words</label>
+      </div>
+      <label class="check"><input id="include-previews" type="checkbox"> Also include previews of paywalled posts I can’t read in full</label>
+      <div class="actions">
+        <button id="find" class="primary">Find posts</button>
+        <span id="find-status" class="status" role="status"></span>
+      </div>
+    </section>
+
+    <section id="results-card" class="card" aria-labelledby="results-h" hidden>
+      <div class="card-head">
+        <h2 id="results-h"><span class="step">3</span>Posts</h2>
+        <div>
+          <button class="link" id="posts-all">All</button>
+          <button class="link" id="posts-none">None</button>
+        </div>
+      </div>
+      <p id="summary" class="summary"></p>
+      <p id="previews-note" class="previews-note" hidden></p>
+      <ul id="posts" class="posts"></ul>
+      <details id="errors" hidden>
+        <summary></summary>
+        <ul></ul>
+        <button id="retry-failed" class="secondary small" hidden>Retry these</button>
+      </details>
+    </section>
+
+    <section id="output-card" class="card" aria-labelledby="output-h" hidden>
+      <h2 id="output-h"><span class="step">4</span>Staple the posts</h2>
+      <div class="grid">
+        <label class="wide">Title <input id="title" type="text"></label>
+      </div>
+      <div class="grid">
+        <label>Order
+          <select id="order">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="publication">By publication</option>
+          </select>
+        </label>
+        <label>Images
+          <select id="image-scale">
+            <option value="100">Full width</option>
+            <option value="75">75%</option>
+            <option value="50">50%</option>
+            <option value="25">25%</option>
+            <option value="0">No images</option>
+          </select>
+        </label>
+        <label>Paper <span class="muted">(PDF)</span>
+          <select id="page-size">
+            <option value="letter">US Letter</option>
+            <option value="a4">A4</option>
+          </select>
+        </label>
+      </div>
+      <div class="actions">
+        <button id="make-pdf" class="primary">Make PDF</button>
+        <button id="make-epub" class="primary">Make EPUB</button>
+        <button id="make-html" class="primary">Make HTML</button>
+        <span class="muted">Opens the book in a new tab. PDF goes to the print dialog; EPUB and HTML download.</span>
+      </div>
+    </section>
+  </main>
+
+  <footer id="support" class="support" hidden>
+    Staple is free. If it’s useful to you, consider <a id="support-link" target="_blank" rel="noopener">buying me a coffee</a>.
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

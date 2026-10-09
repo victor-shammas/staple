@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Staple</title>
+  <link rel="stylesheet" href="book.css">
+  <style id="page-size"></style>
+</head>
+<body>
+  <div class="toolbar screen-only">
+    <div class="toolbar-text">
+      <div id="status">Preparing…</div>
+      <div id="notice" class="notice" hidden></div>
+      <div class="hint" id="hint"></div>
+    </div>
+    <a id="support" class="support" target="_blank" rel="noopener" hidden>Like Staple? Buy me a coffee</a>
+    <progress id="progress" max="1" value="0"></progress>
+    <button id="action" disabled>Working…</button>
+  </div>
+  <main id="book"></main>
+  <script type="module" src="book.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Staple icon options</title>
+<style>
+  :root { --bg: #f4f1ea; --card: #fff; --ink: #1b1a17; --muted: #6b675f; --rule: #e2ddd2; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #161513; --card: #211f1c; --ink: #ece8df; --muted: #a19b8f; --rule: #34312c; } }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 -apple-system, "Helvetica Neue", Arial, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font: 700 28px/1.2 Charter, Georgia, serif; margin: 0 0 4px; }
+  p.lede { color: var(--muted); margin: 0 0 28px; }
+  .family { display: flex; gap: 18px; align-items: center; margin: 0 0 28px; flex-wrap: wrap; }
+  .family figure { margin: 0; text-align: center; font-size: 12px; color: var(--muted); }
+  .family img { width: 96px; height: 96px; display: block; }
+  .opt { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 20px; margin: 0 0 16px; display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: center; }
+  .opt > img { width: 200px; height: 200px; }
+  h2 { margin: 0 0 4px; font-size: 18px; }
+  .opt p { margin: 0 0 14px; color: var(--muted); }
+  .row { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+  .sib { display: flex; gap: 8px; align-items: center; }
+  .sib img { width: 56px; height: 56px; }
+  .bar { display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 8px; font-size: 12px; }
+  .bar.light { background: #dee1e6; color: #333; }
+  .bar.dark { background: #35363a; color: #ddd; }
+  .bar img { width: 16px; height: 16px; }
+  .bar .ghost { width: 16px; height: 16px; border-radius: 50%; background: currentColor; opacity: .25; }
+  @media (max-width: 640px) { .opt { grid-template-columns: 1fr; } .opt > img { width: 160px; height: 160px; } }
+</style></head>
+<body><main>
+<h1>Staple icon options</h1>
+<p class="lede">Each option is shown large, next to your other apps, and at real toolbar size (16&nbsp;px, crisp on Retina) in Chrome's light and dark toolbars.</p>
+<div class="family">
+  <figure><img src="plainview-icon.png" alt="">Plainview</figure>
+  <figure><img src="gaugeline-icon.png" alt="">Gaugeline</figure>
+  <figure><img src="quoth-icon.png" alt="">Quoth</figure>
+</div>
+<script>
+const opts = [
+  ['1-tilted', '1 · Tilted staple', 'A single bold staple at an angle: the most recognisable as a staple, and the closest to the one-glyph style of Quoth and Plainview.'],
+  ['2-flat', '2 · Flat staple', 'The same staple upright and centred. Calmer and more symmetrical, but it can read a little like a “Π” or a table.'],
+  ['3-page', '3 · Stapled page', 'A dim page with text lines and a staple across the corner, echoing Gaugeline’s dim track. Tells the “document” story, busier at small sizes.'],
+  ['4-stack', '4 · Bound stack', 'A stack of pages held by a staple — the “many posts into one book” idea. Honestly, it reads more like a shopping bag or a padlock; included for comparison.'],
+];
+for (const [id, title, text] of opts) document.write(`
+<section class="opt"><img src="opt-${id}-256.png" alt="">
+<div><h2>${title}</h2><p>${text}</p>
+<div class="row">
+  <div class="sib"><img src="plainview-icon.png" alt=""><img src="opt-${id}-256.png" alt=""><img src="quoth-icon.png" alt=""></div>
+  <div class="bar light"><span class="ghost"></span><span class="ghost"></span><img srcset="opt-${id}-compact-16.png 1x, opt-${id}-compact-32.png 2x" alt=""><span class="ghost"></span> light toolbar</div>
+  <div class="bar dark"><span class="ghost"></span><span class="ghost"></span><img srcset="opt-${id}-compact-16.png 1x, opt-${id}-compact-32.png 2x" alt=""><span class="ghost"></span> dark toolbar</div>
+</div></div></section>`);
+</script>
+</main></body></html>

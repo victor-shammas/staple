@@ -1,0 +1,304 @@
+import { countWords, describeError, fetchPostBody, mapLimit, readingMinutes } from './lib/substack.js';
+import { cleanPostHtml, safeUrl } from './lib/clean.js';
+import { showRateLimitNotices } from './lib/notice.js';
+import { exportEpub } from './lib/epub-export.js';
+import { exportHtml } from './lib/html-export.js';
+import { SUPPORT_URL } from './lib/config.js';
+import { el, fmtDate, fmtHours, fmtNumber, fmtRange } from './lib/format.js';
+
+const $ = (id) => document.getElementById(id);
+
+function status(text, value, max) {
+  $('status').textContent = text;
+  if (max) {
+    $('progress').max = max;
+    $('progress').value = value;
+  }
+}
+
+function sortPosts(posts, order) {
+  const byDate = (a, b) => new Date(a.date) - new Date(b.date);
+  const sorted = [...posts];
+  if (order === 'oldest') sorted.sort(byDate);
+  else if (order === 'publication') sorted.sort((a, b) => a.pubName.localeCompare(b.pubName) || byDate(a, b));
+  else sorted.sort((a, b) => byDate(b, a));
+  return sorted;
+}
+
+function byline(post) {
+  const parts = [];
+  if (post.authors?.length) parts.push(`By ${post.authors.join(' and ')}`);
+  parts.push(fmtDate(post.date));
+  parts.push(`${readingMinutes(post.words)} min read`);
+  return parts.join(' · ');
+}
+
+function bookStats(articles) {
+  const words = articles.reduce((n, a) => n + a.words, 0);
+  const n = articles.length;
+  return `${n} ${n === 1 ? 'essay' : 'essays'} · ${fmtNumber(words)} words · about ${fmtHours(readingMinutes(words))} of reading`;
+}
+
+function publications(articles) {
+  return [...new Set(articles.map((a) => a.pubName))].sort((a, b) => a.localeCompare(b));
+}
+
+function renderCover(job, articles) {
+  return el('section', { class: 'cover' },
+    el('p', { class: 'cover-kicker', text: 'Staple' }),
+    el('h1', { class: 'cover-title', text: job.title }),
+    el('p', { class: 'cover-range', text: fmtRange(job.from, job.to) }),
+    el('p', { class: 'cover-stats', text: bookStats(articles) }),
+    el('p', { class: 'cover-colophon',
+      text: `Compiled ${fmtDate(new Date())} from Substack posts available to you. Each piece belongs to its author; links lead back to the originals.` }),
+  );
+}
+
+function renderToc(articles) {
+  return el('nav', { class: 'toc' },
+    el('h2', { text: 'Contents' }),
+    el('ol', {}, articles.map((a, i) => el('li', {},
+      el('a', { href: `#post-${i}` },
+        el('span', { class: 'toc-title', text: a.title }),
+        el('span', { class: 'toc-meta',
+          text: `${a.pubName}${a.authors?.length ? ` · ${a.authors.join(', ')}` : ''} · ${fmtDate(a.date, { month: 'short', day: 'numeric' })} · ${readingMinutes(a.words)} min` }),
+      ),
+    ))),
+  );
+}
+
+function renderArticle(post, i, job) {
+  const url = safeUrl(post.url, undefined, { mail: false }) || safeUrl(`${post.pubBase}/p/${post.slug}`) || '';
+  const body = el('div', { class: 'post-body' });
+  body.innerHTML = cleanPostHtml(post.html, { prefix: `p${i}`, imageScale: job.imageScale, postUrl: url });
+  return el('article', { id: `post-${i}`, class: 'post' },
+    el('header', { class: 'post-header' },
+      el('p', { class: 'post-pub', text: post.pubName }),
+      el('h1', { class: 'post-title', text: post.title }),
+      post.subtitle && el('p', { class: 'post-subtitle', text: post.subtitle }),
+      el('p', { class: 'post-byline', text: byline(post) }),
+      url && el('p', { class: 'post-source' }, el('a', { href: url, text: url.replace(/^https?:\/\//, '') })),
+      post.access === 'preview' &&
+        el('p', { class: 'preview-note', text: 'Preview only — the rest of this post is for paid subscribers.' }),
+    ),
+    body,
+    url && el('footer', { class: 'post-footer' },
+      el('p', {},
+        post.access === 'preview' ? 'Want the rest? ' : 'Enjoyed this? ',
+        el('a', { href: url, text: post.access === 'preview' ? 'Read it on Substack' : 'Like, comment or restack it on Substack' }),
+      ),
+    ),
+  );
+}
+
+// Closing page: a short thank-you that points readers back to the writers.
+function renderAfterword() {
+  return el('section', { class: 'afterword' },
+    el('h2', { text: 'A note on supporting writers' }),
+    el('p', { text: 'Everything in this collection is gathered here only for your own reading. Staple makes no copies for anyone else, and every piece links back to its original.' }),
+    el('p', { text: 'If something here stayed with you, the best thanks is to go back to the source: like it, leave a comment, restack it or share it with a friend — and, where you can, become a paying supporter of the writers you keep coming back to.' }),
+  );
+}
+
+function waitForImages(root, timeoutMs = 20000) {
+  const imgs = [...root.querySelectorAll('img')];
+  if (!imgs.length) return Promise.resolve();
+  let done = 0;
+  return Promise.all(imgs.map((img) => new Promise((resolve) => {
+    let settled = false;
+    let timer;
+    const arm = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => finish(img.complete && img.naturalWidth > 0), timeoutMs);
+    };
+    const finish = (ok) => {
+      if (settled) return;
+      // If the resized CDN copy fails, fall back to the original once.
+      if (!ok && img.dataset.original && img.getAttribute('src') !== img.dataset.original) {
+        img.src = img.dataset.original;
+        arm();
+        return;
+      }
+      settled = true;
+      clearTimeout(timer);
+      if (!ok) img.remove();
+      done++;
+      status(`Loading images… ${done} of ${imgs.length}`, done, imgs.length);
+      resolve();
+    };
+    img.addEventListener('load', () => finish(true));
+    img.addEventListener('error', () => finish(false));
+    arm();
+    if (img.complete) finish(img.naturalWidth > 0);
+  })));
+}
+
+// Once the book is ready, show the support link for a minute, then fade it
+// out (but not while the pointer is on it).
+function showSupportLink() {
+  if (!SUPPORT_URL) return;
+  const link = $('support');
+  link.href = SUPPORT_URL;
+  link.hidden = false;
+  let hovering = false;
+  let due = false;
+  const fade = () => {
+    if (hovering) { due = true; return; }
+    link.classList.add('fading');
+    link.addEventListener('transitionend', () => { link.hidden = true; }, { once: true });
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) link.hidden = true;
+  };
+  link.addEventListener('mouseenter', () => { hovering = true; });
+  link.addEventListener('mouseleave', () => { hovering = false; if (due) fade(); });
+  setTimeout(fade, 60_000);
+}
+
+function safeFilename(name) {
+  return name.replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').trim();
+}
+
+function download(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = el('a', { href: url, download: filename });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60_000);
+}
+
+function fmtBytes(n) {
+  return n > 1e6 ? `${(n / 1e6).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1e3))} KB`;
+}
+
+// Older jobs stored a boolean `images`.
+function imageScaleOf(job) {
+  if (typeof job.imageScale === 'number') return job.imageScale;
+  return job.images === false ? 0 : 100;
+}
+
+// Why posts were left out, e.g. "2 paywalled, 1 couldn’t load: Substack is rate-limiting…".
+function skippedNote(fetched, includePreviews) {
+  const paywalled = fetched.filter((p) => p.access === 'none' || (p.access === 'preview' && !includePreviews)).length;
+  const failed = fetched.filter((p) => p.access === 'error');
+  const parts = [];
+  if (paywalled) parts.push(`${paywalled} paywalled`);
+  if (failed.length) parts.push(`${failed.length} couldn’t load: ${failed[0].reason || 'network error'}`);
+  return parts.length ? ` (skipped ${parts.join('; ')})` : '';
+}
+
+async function main() {
+  showRateLimitNotices($('notice'));
+  // Each book tab has its own job, so several can run side by side.
+  const id = new URLSearchParams(location.search).get('job');
+  const key = id ? `job:${id}` : 'job';
+  const { [key]: job } = await chrome.storage.local.get(key);
+  if (!job?.posts?.length) {
+    status('Nothing to bind yet — open Staple and choose some posts first.');
+    return;
+  }
+  const format = ['epub', 'html'].includes(job.format) ? job.format : 'pdf';
+  job.imageScale = imageScaleOf(job);
+  const range = fmtRange(job.from, job.to);
+  document.title = `${job.title} — ${range}`;
+  const pageCss = `@page { size: ${job.pageSize === 'a4' ? 'A4' : 'letter'}; }`;
+  $('page-size').textContent = pageCss;
+  document.documentElement.style.setProperty('--img-scale', `${job.imageScale || 100}%`);
+  document.documentElement.style.setProperty('--img-k', String((job.imageScale || 100) / 100));
+  $('hint').innerHTML = {
+    pdf: 'In the print dialog, choose <b>Save as PDF</b> and, under <i>More settings</i>, untick <b>Headers and footers</b>.',
+    epub: 'The EPUB downloads automatically. Open it in Apple Books, Kobo or Calibre, or send it to your Kindle.',
+    html: 'The HTML file downloads automatically — one file with images included, so it opens in any browser, even offline.',
+  }[format];
+  $('action').textContent = { pdf: 'Save as PDF…', epub: 'Download EPUB', html: 'Download HTML' }[format];
+
+  let done = 0;
+  const total = job.posts.length;
+  status(`Fetching posts… 0 of ${total}`, 0, total);
+  const fetched = await mapLimit(job.posts, 3, async (p) => {
+    const body = await fetchPostBody(p).catch((e) => ({ html: '', access: 'error', reason: describeError(e) }));
+    done++;
+    status(`Fetching posts… ${done} of ${total}`, done, total);
+    return {
+      ...p,
+      ...body,
+      pubName: body.pubName || p.pubName,
+      authors: body.authors?.length ? body.authors : p.authors,
+      words: p.wordcount || countWords(body.html),
+    };
+  });
+
+  const usable = fetched.filter((p) => p.access === 'full' || (job.includePreviews && p.access === 'preview'));
+  const articles = sortPosts(usable, job.order);
+  if (!articles.length) {
+    const failed = fetched.find((p) => p.access === 'error');
+    status(failed
+      ? `Couldn’t load the selected posts (${failed.reason}). Reload this tab to try again.`
+      : 'None of the selected posts could be read in full. Are you signed in to Substack in this browser?');
+    return;
+  }
+  for (const a of articles) if (a.access === 'preview') a.words = countWords(a.html);
+
+  const book = $('book');
+  const cover = renderCover(job, articles);
+  const toc = renderToc(articles);
+  const articleEls = articles.map((a, i) => renderArticle(a, i, job));
+  const afterword = renderAfterword();
+  if (format !== 'pdf') {
+    // The preview is just for looking; images are downloaded separately.
+    for (const img of book.querySelectorAll('img')) img.loading = 'lazy';
+  }
+  book.append(cover, toc, ...articleEls, afterword);
+
+  const note = skippedNote(fetched, job.includePreviews);
+
+  if (format === 'pdf') {
+    await waitForImages(book);
+    status(`Ready: ${articles.length} posts${note}.`, 1, 1);
+    $('action').disabled = false;
+    $('action').addEventListener('click', () => window.print());
+    document.body.dataset.ready = 'true';
+    showSupportLink();
+    setTimeout(() => window.print(), 300);
+    return;
+  }
+
+  const parts = { cover, toc, articles: articleEls, afterword };
+  const languages = articles.map((a) => a.language).filter(Boolean);
+  let blob;
+  if (format === 'epub') {
+    const authors = [...new Set(articles.flatMap((a) => a.authors || []))];
+    blob = await exportEpub(parts, {
+      title: job.title,
+      range,
+      stats: bookStats(articles),
+      pubs: publications(articles),
+      creators: authors.length <= 3 ? authors : [],
+      language: languages[0] || 'en',
+      description: `${range}: ${articles.map((a) => a.title).join(' · ')}`,
+      imageScale: job.imageScale,
+    }, status);
+  } else {
+    blob = await exportHtml(parts, {
+      title: document.title,
+      language: languages[0] || 'en',
+      pageCss,
+      imageScale: job.imageScale,
+    }, status);
+  }
+  const filename = `${safeFilename(document.title)}.${format}`;
+  download(blob, filename);
+  status(`${format.toUpperCase()} ready: ${articles.length} posts, ${fmtBytes(blob.size)}${note}. Download started as “${filename}” — if nothing appeared, click ${$('action').textContent}.`, 1, 1);
+  $('action').disabled = false;
+  $('action').addEventListener('click', () => download(blob, filename));
+  document.body.dataset.ready = 'true';
+  showSupportLink();
+}
+
+main().catch((e) => {
+  console.error(e);
+  if (e instanceof RangeError && /string length/i.test(e.message)) {
+    status('This book is too large to save as one HTML file. Try smaller images, or make an EPUB instead.');
+  } else {
+    status(`Something went wrong: ${e.message}`);
+  }
+});
