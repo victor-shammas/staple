@@ -13,8 +13,8 @@ order; the text to paste is below it.
 | `privacy-policy.md` | Source text of the policy published at the URL below |
 | `notes-post.md` | Draft announcement for Substack Notes |
 
-The website (including the privacy policy) lives in `../site/` and is
-published from the `victor-shammas/staple` repository to
+The website (including the privacy policy) lives in `../docs/` and is
+published by GitHub Pages from this repository (`victor-shammas/staple`) to
 **https://victorshammas.com/staple/**.
 
 ---
@@ -40,7 +40,7 @@ published from the `victor-shammas/staple` repository to
 9. **Submit for review.** Expect a few days, possibly up to two weeks: you are
    a new developer, and the optional "any website" permission (for
    custom-domain publications) can mean a manual review.
-10. When it's live, put the listing link in `../site/index.html` (see the
+10. When it's live, put the listing link in `../docs/index.html` (see the
     comment above the hero button), push the site, and post `notes-post.md`.
 
 ---

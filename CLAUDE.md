@@ -2,7 +2,9 @@
 
 Staple staples a date range of Substack posts the user can read (free posts,
 plus paid posts they subscribe to) into one PDF, EPUB or HTML file. Manifest
-V3, plain ES modules, no build step, no dependencies.
+V3, plain ES modules, no build step, no dependencies. Open source (MIT), in
+the public repo `victor-shammas/staple`, which also holds the website
+(`docs/`) and the GitHub releases.
 
 ## Layout
 
@@ -14,8 +16,10 @@ V3, plain ES modules, no build step, no dependencies.
 - `lib/epub*.js`, `lib/zip.js`, `lib/html-export.js`, `lib/images.js`
 - `lib/config.js` — `SUPPORT_URL` (Buy Me a Coffee)
 - `store/` — Chrome Web Store kit (`SUBMISSION.md`, screenshots, promo, brand)
-- `site/` — **separate public repo** `victor-shammas/staple` (GitHub Pages at
-  https://victorshammas.com/staple/); ignored here
+- `docs/` — the website, served by GitHub Pages from `main` /docs at
+  https://victorshammas.com/staple/ (see `docs/README.md`). Any push to main
+  that touches `docs/` publishes the site.
+- `LICENSE` — MIT
 
 ## Substack API notes
 
@@ -40,5 +44,5 @@ No test runner yet. Changes were verified with headless Chrome (CDP) driving
 - Wording: "staple … into one collection", not "book", in marketing copy.
 - Contact: contact+staple@victorshammas.com. Owner's Substack for examples:
   www.theorybrief.com.
-- Releases: follow `RELEASING.md`; keep `site/privacy.html` identical to
+- Releases: follow `RELEASING.md`; keep `docs/privacy.html` identical to
   `store/privacy-policy.md`.

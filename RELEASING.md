@@ -3,8 +3,8 @@
 Staple ships through two channels from this repo:
 
 - **Chrome Web Store** — the main channel (auto-updates for users).
-- **GitHub release** on the *public* site repo `victor-shammas/staple`, for
-  manual installs.
+- **GitHub release** on this repo (`victor-shammas/staple`), for manual
+  installs.
 
 ## Checklist
 
@@ -32,9 +32,9 @@ Staple ships through two channels from this repo:
          --title "Staple X.Y.Z" --notes "…what changed…"
 
 7. **Tag this repo:** `git tag vX.Y.Z && git push --tags`.
-8. **Website** (`site/`, its own repo): update anything that changed — support
-   answers, screenshots, and `privacy.html` if `store/privacy-policy.md`
-   changed (keep them identical). Commit and push there.
+8. **Website** (`docs/`): update anything that changed — support answers,
+   screenshots, and `docs/privacy.html` if `store/privacy-policy.md` changed
+   (keep them identical). Pushing to main publishes it.
 
 ## If a review is rejected
 

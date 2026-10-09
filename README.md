@@ -69,9 +69,12 @@ Be signed in to substack.com in the same Chrome profile if you want
 
 ## Website
 
-`site/` is the public website (home, support, privacy policy), published from
-the `victor-shammas/staple` repository with GitHub Pages at
-https://victorshammas.com/staple/. See `site/README.md`.
+`docs/` is the public website (home, support, privacy policy), published with
+GitHub Pages at https://victorshammas.com/staple/. See `docs/README.md`.
+
+## License
+
+MIT — see `LICENSE`.
 
 ## Publishing
 
