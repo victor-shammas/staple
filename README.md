@@ -5,7 +5,12 @@ print-ready PDF, an EPUB for your e-reader, or a single self-contained HTML file
 includes free posts plus any paid posts you subscribe to; paywalled posts you
 can't read are shown as "preview only" and left out by default.
 
-## Install (developer mode)
+## Install
+
+Install Staple from the Chrome Web Store:
+https://chromewebstore.google.com/detail/staple/hakeoeghnpkdejinkkbopcmonhigpmdf
+
+### Or load it unpacked (developer mode)
 
 1. Open `chrome://extensions` and turn on **Developer mode** (top right).
 2. Click **Load unpacked** and choose this `Staple` folder.

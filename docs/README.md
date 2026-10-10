@@ -21,9 +21,9 @@ The GitHub Pages **user site** (the `victor-shammas.github.io` repo) uses the cu
 
 This folder is served by GitHub Pages from the `main` branch, folder `/docs`, of the public repo `victor-shammas/staple` (which also holds the extension's source and releases). Edit the pages here and push to `main`; the site updates within a minute or two. If Pages ever needs setting up again: repo › **Settings › Pages** › Source: **Deploy from a branch**, Branch: **main**, folder **/docs**, and leave "Custom domain" empty.
 
-## At launch
+## Store listing and assets
 
-- **Chrome Web Store link:** `index.html` shows a disabled "Coming soon to the Chrome Web Store" button. Once the listing is live, replace the `<span class="btn" aria-disabled="true">…</span>` line with the link in the HTML comment just above it, putting in the real listing URL (`https://chromewebstore.google.com/detail/staple/<extension ID>`, copied from the Developer Dashboard). `support.html` (Getting started › How do I install Staple?) points to the home page for the link, so it needs no change, but you can link the store directly there too.
+- **Chrome Web Store link:** Staple is live at https://chromewebstore.google.com/detail/staple/hakeoeghnpkdejinkkbopcmonhigpmdf. The "Add to Chrome" button in `index.html` and the first install step in `support.html` (Getting started › How do I install Staple?) link there; keep the URL free of `?authuser`/`hl` parameters.
 - **Official badge (optional):** to use Google's "Available in the Chrome Web Store" badge instead of the text button, download it from the Chrome Web Store branding guidelines and follow their rules.
 - **Screenshots:** replace `images/book.png` (a book's cover and contents) and `images/app.png` (the Publications step) with final 1280×800 screenshots under the same names. If what they show changes, update their `alt` text in `index.html`.
 - **Privacy policy:** `privacy.html` is the text of `../store/privacy-policy.md`. If the policy changes, update both and the effective date.
