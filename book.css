@@ -5,7 +5,6 @@
   --ink: #1b1a17;
   --muted: #6b675f;
   --rule: #d9d5cc;
-  --accent: #8a3b12;
 }
 
 * { box-sizing: border-box; }
@@ -31,24 +30,25 @@ body {
   align-items: center;
   gap: 16px;
   padding: 12px 20px;
-  background: #1b1a17;
-  color: #f4f1ea;
+  background: #f6f3ec;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
   font: 14px/1.4 var(--sans);
 }
 .toolbar-text { flex: 1; min-width: 0; }
-.toolbar .hint { color: #b9b3a6; font-size: 12px; margin-top: 2px; }
-.toolbar .notice { color: #f2c27a; font-size: 12px; margin-top: 2px; }
+.toolbar .hint { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.toolbar .notice { color: #7a5a12; font-size: 12px; margin-top: 2px; }
 .toolbar .notice[hidden] { display: none; }
-.toolbar progress { width: 140px; accent-color: #e07a3f; }
+.toolbar progress { width: 140px; accent-color: var(--ink); }
 .toolbar .support {
-  color: #e9c2a6;
+  color: var(--muted);
   font-size: 13px;
   text-decoration: none;
   white-space: nowrap;
   opacity: 1;
   transition: opacity 1.5s ease;
 }
-.toolbar .support:hover { color: #ffd9bd; text-decoration: underline; }
+.toolbar .support:hover { color: var(--ink); text-decoration: underline; }
 .toolbar .support.fading { opacity: 0; }
 .toolbar .support[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) { .toolbar .support { transition: none; } }
@@ -57,8 +57,8 @@ body {
   padding: 8px 16px;
   border: 0;
   border-radius: 6px;
-  background: #e07a3f;
-  color: #1b1a17;
+  background: var(--ink);
+  color: #f6f3ec;
   cursor: pointer;
 }
 .toolbar button:disabled { opacity: .4; cursor: default; }
@@ -80,71 +80,56 @@ main > section, main > nav, main > article {
   .toolbar { flex-wrap: wrap; }
 }
 
-/* ---------- Cover ---------- */
+/* ---------- Cover: the contents ---------- */
 
+/* The contents are the cover: a quiet line, the reader's own title if there is
+   one, then the essays. No masthead. */
 .cover { text-align: left; }
-.cover-kicker {
-  font: 600 12px/1 var(--sans);
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0 0 2.5em;
-}
+.cover-head { padding-bottom: .8em; border-bottom: 1px solid var(--ink); margin-bottom: 1.6em; }
+.cover-line { font: 13px/1.5 var(--sans); color: var(--muted); margin: 0; }
 .cover-title {
   font-size: 2.6em;
   line-height: 1.08;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: -.01em;
-  margin: 0 0 .35em;
+  margin: .3em 0 0;
+  text-wrap: balance;
 }
-.cover-range { font-size: 1.25em; margin: 0 0 .25em; color: var(--muted); font-style: italic; }
-.cover-stats { font: 14px/1.5 var(--sans); color: var(--muted); margin: 0 0 3em; padding-bottom: 2em; border-bottom: 1px solid var(--rule); }
-.cover-colophon { font: 12px/1.5 var(--sans); color: var(--muted); max-width: 30em; }
+.cover-colophon { font: 12px/1.5 var(--sans); color: var(--muted); max-width: 30em; margin: 2.4em 0 0; }
 
-/* ---------- Contents ---------- */
-
-.toc h2 {
-  font: 600 12px/1 var(--sans);
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0 0 2em;
-}
-.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
-.toc li { counter-increment: toc; margin: 0 0 1em; break-inside: avoid; }
-.toc a {
-  display: grid;
-  grid-template-columns: 2.2em 1fr;
-  color: inherit;
-  text-decoration: none;
-}
-.toc a::before {
-  content: counter(toc);
-  grid-row: span 2;
-  font: 600 13px/1.6 var(--sans);
-  color: var(--muted);
-}
-.toc-title { font-size: 1.05em; line-height: 1.3; }
-.toc-meta { font: 12px/1.5 var(--sans); color: var(--muted); }
+.toc ol { list-style: none; padding: 0; margin: 0; }
+/* Each entry its own unit: a hairline between them. */
+.toc li { padding: .8em 0 .9em; border-top: 1px solid var(--rule); break-inside: avoid; }
+.toc li:first-child { border-top: 0; padding-top: 0; }
+.toc a { display: block; color: inherit; text-decoration: none; }
+/* The publication in small capitals, quiet: an index, not a kicker. */
+.toc-pub { display: block; font-size: .9em; line-height: 1.4; font-variant-caps: all-small-caps; letter-spacing: .06em; color: var(--muted); }
+.toc-title { display: block; font-size: 1.3em; line-height: 1.2; font-weight: 400; text-wrap: balance; }
+.toc-meta { display: block; font-size: .85em; font-style: italic; color: var(--muted); margin-top: .15em; }
+.toc-dek { display: block; font-size: .95em; line-height: 1.4; margin-top: .35em; color: #3b3934; max-width: 34em; }
+/* The first a little larger, with its summary: first among equals. */
+.toc li.lead .toc-title { font-size: 1.5em; line-height: 1.15; }
+.toc a:hover .toc-title { text-decoration: underline; text-decoration-thickness: .06em; text-underline-offset: .14em; }
 
 /* ---------- Articles ---------- */
 
 .post-header { margin-bottom: 2.2em; padding-bottom: 1.4em; border-bottom: 1px solid var(--rule); }
 .post-pub {
-  font: 600 11px/1.3 var(--sans);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0 0 1em;
+  font-size: 1em;
+  line-height: 1.3;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+  color: var(--muted);
+  margin: 0 0 .6em;
 }
-.post-title { font-size: 2em; line-height: 1.12; margin: 0 0 .35em; letter-spacing: -.005em; }
+.post-title { font-size: 2.1em; line-height: 1.1; font-weight: 400; margin: 0 0 .35em; letter-spacing: -.005em; text-wrap: balance; }
 .post-subtitle { font-size: 1.15em; font-style: italic; color: #45423c; margin: 0 0 .9em; line-height: 1.35; }
 .post-byline { font: 13px/1.5 var(--sans); color: var(--muted); margin: 0; }
 .post-source { font: 11px/1.5 var(--sans); margin: .2em 0 0; }
 .post-source a { color: var(--muted); }
 .preview-note {
-  font: 12px/1.4 var(--sans);
-  color: var(--accent);
+  font: italic 13px/1.4 var(--serif);
+  color: var(--muted);
   margin: 1em 0 0;
 }
 
@@ -219,7 +204,7 @@ main > section, main > nav, main > article {
   border-radius: 4px;
   break-inside: avoid;
 }
-.post-body .embed-label { color: var(--accent); }
+.post-body .embed-label { color: var(--ink); }
 .post-body .latex { background: none; padding: 0; text-align: center; }
 
 /* Footnotes: anchors in text, notes collected at the end of each post. */
@@ -227,9 +212,11 @@ main > section, main > nav, main > article {
   font: 600 .68em/0 var(--sans);
   vertical-align: super;
   text-decoration: none;
-  color: var(--accent);
+  color: var(--muted);
   padding: 0 .1em;
 }
+/* Notes side by side read 4, 5, not 45. */
+.post-body .footnote-anchor.footnote-next::before { content: ","; padding-right: .1em; }
 .post-body .footnote {
   display: grid;
   grid-template-columns: 1.8em 1fr;
@@ -242,7 +229,7 @@ main > section, main > nav, main > article {
   padding-top: 1em;
   margin-top: 2em;
 }
-.post-body .footnote-number { color: var(--accent); text-decoration: none; font-family: var(--sans); font-weight: 600; }
+.post-body .footnote-number { color: var(--muted); text-decoration: none; font-family: var(--sans); font-weight: 500; }
 .post-body .footnote-content p { margin: 0 0 .4em; }
 
 /* ---------- Support the writers ---------- */
@@ -255,15 +242,16 @@ main > section, main > nav, main > article {
   color: var(--muted);
 }
 .post-footer p { margin: 0; }
-.post-footer a { color: var(--accent); text-decoration: none; }
+.post-footer a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: .15em; }
 .post-footer a:hover { text-decoration: underline; }
 
 .afterword h2 {
-  font: 600 12px/1 var(--sans);
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0 0 2em;
+  font-size: 1.1em;
+  font-weight: 400;
+  font-variant-caps: all-small-caps;
+  letter-spacing: .07em;
+  color: var(--muted);
+  margin: 0 0 1.4em;
 }
 .afterword p { margin: 0 0 1em; max-width: 34em; }
 
@@ -292,8 +280,7 @@ main > section, main > nav, main > article {
     box-shadow: none;
     background: none;
   }
-  .cover { padding-top: 45mm !important; break-after: page; }
-  .toc { break-after: page; }
+  .cover { padding-top: 6mm !important; break-after: page; }
   .post + .post, .afterword { break-before: page; }
   .post-footer { text-align: left; }
   .post-body { text-align: justify; }

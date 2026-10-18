@@ -4,7 +4,7 @@ import { showRateLimitNotices } from './lib/notice.js';
 import { exportEpub } from './lib/epub-export.js';
 import { exportHtml } from './lib/html-export.js';
 import { SUPPORT_URL } from './lib/config.js';
-import { el, fmtDate, fmtHours, fmtNumber, fmtRange } from './lib/format.js';
+import { el, fmtDate, fmtHours, fmtNumber, fmtRange, summary } from './lib/format.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -43,25 +43,46 @@ function publications(articles) {
   return [...new Set(articles.map((a) => a.pubName))].sort((a, b) => a.localeCompare(b));
 }
 
+// The titles the app gives a collection until the reader names it: the cover
+// shows a heading only for a title of the reader's own.
+const DEFAULT_TITLES = new Set(['The Week’s Reading', 'Collected Reading']);
+
+function ownTitle(job) {
+  const t = (job.title || '').trim();
+  return t && !DEFAULT_TITLES.has(t) ? t : null;
+}
+
+// "Oct 11 – Oct 18, 2026 · 7 essays · about 1 h 40 min of reading"
+function coverLine(job, articles) {
+  const words = articles.reduce((n, a) => n + a.words, 0);
+  const n = articles.length;
+  return `${fmtRange(job.from, job.to)} · ${n} ${n === 1 ? 'essay' : 'essays'} · about ${fmtHours(readingMinutes(words))} of reading`;
+}
+
+// The contents are the cover: a quiet line, the reader's own title if there is
+// one, then the essays, the first a little larger with its summary.
 function renderCover(job, articles) {
+  const own = ownTitle(job);
   return el('section', { class: 'cover' },
-    el('p', { class: 'cover-kicker', text: 'Staple' }),
-    el('h1', { class: 'cover-title', text: job.title }),
-    el('p', { class: 'cover-range', text: fmtRange(job.from, job.to) }),
-    el('p', { class: 'cover-stats', text: bookStats(articles) }),
+    el('header', { class: 'cover-head' },
+      el('p', { class: 'cover-line', text: coverLine(job, articles) }),
+      own && el('h1', { class: 'cover-title', text: own }),
+    ),
+    renderToc(articles),
     el('p', { class: 'cover-colophon',
       text: `Compiled ${fmtDate(new Date())} from Substack posts available to you. Each piece belongs to its author; links lead back to the originals.` }),
   );
 }
 
 function renderToc(articles) {
-  return el('nav', { class: 'toc' },
-    el('h2', { text: 'Contents' }),
-    el('ol', {}, articles.map((a, i) => el('li', {},
+  return el('nav', { class: 'toc', 'aria-label': 'Contents' },
+    el('ol', {}, articles.map((a, i) => el('li', { class: i === 0 ? 'lead' : null },
       el('a', { href: `#post-${i}` },
+        el('span', { class: 'toc-pub', text: a.pubName }),
         el('span', { class: 'toc-title', text: a.title }),
         el('span', { class: 'toc-meta',
-          text: `${a.pubName}${a.authors?.length ? ` · ${a.authors.join(', ')}` : ''} · ${fmtDate(a.date, { month: 'short', day: 'numeric' })} · ${readingMinutes(a.words)} min` }),
+          text: `${a.authors?.length ? `${a.authors.join(', ')} · ` : ''}${fmtDate(a.date, { month: 'short', day: 'numeric' })} · ${readingMinutes(a.words)} min` }),
+        i === 0 && a.subtitle && el('span', { class: 'toc-dek', text: summary(a.subtitle, 280) }),
       ),
     ))),
   );
@@ -71,11 +92,17 @@ function renderArticle(post, i, job) {
   const url = safeUrl(post.url, undefined, { mail: false }) || safeUrl(`${post.pubBase}/p/${post.slug}`) || '';
   const body = el('div', { class: 'post-body' });
   body.innerHTML = cleanPostHtml(post.html, { prefix: `p${i}`, imageScale: job.imageScale, postUrl: url });
+  // Notes side by side read 4, 5, not 45.
+  for (const a of body.querySelectorAll('.footnote-anchor')) {
+    let prev = a.previousSibling;
+    while (prev && prev.nodeType === Node.TEXT_NODE && !prev.data.trim()) prev = prev.previousSibling;
+    if (prev?.nodeType === Node.ELEMENT_NODE && prev.classList.contains('footnote-anchor')) a.classList.add('footnote-next');
+  }
   return el('article', { id: `post-${i}`, class: 'post' },
     el('header', { class: 'post-header' },
       el('p', { class: 'post-pub', text: post.pubName }),
       el('h1', { class: 'post-title', text: post.title }),
-      post.subtitle && el('p', { class: 'post-subtitle', text: post.subtitle }),
+      post.subtitle && el('p', { class: 'post-subtitle', text: summary(post.subtitle, 320) }),
       el('p', { class: 'post-byline', text: byline(post) }),
       url && el('p', { class: 'post-source' }, el('a', { href: url, text: url.replace(/^https?:\/\//, '') })),
       post.access === 'preview' &&
@@ -240,14 +267,14 @@ async function main() {
 
   const book = $('book');
   const cover = renderCover(job, articles);
-  const toc = renderToc(articles);
+  const toc = cover.querySelector('.toc');
   const articleEls = articles.map((a, i) => renderArticle(a, i, job));
   const afterword = renderAfterword();
   if (format !== 'pdf') {
     // The preview is just for looking; images are downloaded separately.
     for (const img of book.querySelectorAll('img')) img.loading = 'lazy';
   }
-  book.append(cover, toc, ...articleEls, afterword);
+  book.append(cover, ...articleEls, afterword);
 
   const note = skippedNote(fetched, job.includePreviews);
 
@@ -269,7 +296,10 @@ async function main() {
     const authors = [...new Set(articles.flatMap((a) => a.authors || []))];
     blob = await exportEpub(parts, {
       title: job.title,
+      ownTitle: ownTitle(job),
       range,
+      line: coverLine(job, articles),
+      entries: articles.map((a) => ({ pub: a.pubName, title: a.title, dek: a.subtitle ? summary(a.subtitle, 200) : '' })),
       stats: bookStats(articles),
       pubs: publications(articles),
       creators: authors.length <= 3 ? authors : [],

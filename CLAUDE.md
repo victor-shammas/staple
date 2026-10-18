@@ -38,6 +38,20 @@ No test runner yet. Changes were verified with headless Chrome (CDP) driving
 `app.html`/`book.html` served over http with a stubbed `chrome.*` API, plus
 `xmllint` on EPUB output. `--load-extension` doesn't work in branded Chrome.
 
+## Design
+
+The book looks like a literary review (LRB, NYRB), not a newspaper; the same
+direction as the owner's Broadsheet app (2026-10-18). The contents are the
+cover: `cover-line` (dates · essays · reading time), the reader's own title as
+`cover-title` only if it isn't one of the app's defaults (`DEFAULT_TITLES` in
+book.js), then the contents (`.toc`, inside the cover; the first entry `lead`,
+with its subtitle via `summary()`). Titles in the text face's regular weight,
+publications in muted small capitals, hairlines between entries, no accent
+colour in the book; adjacent footnote anchors get `footnote-next` (a comma).
+The EPUB's title page holds the contents (`contentsPage` may be null in
+`buildEpub`); its drawn cover lists the titles too. The app's UI uses one ink
+for actions (`--accent` is ink, not orange).
+
 ## Conventions
 
 - Plain, concrete, unhyped prose in UI and docs; no emoji.

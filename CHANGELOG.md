@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- A quieter look, like a literary review rather than a newspaper: the contents
+  are the cover (a line with the dates, the number of essays and the reading
+  time, the collection's own title only if you gave it one, then the essays,
+  the first a little larger with its summary). Titles in regular weight,
+  publications in small capitals, no orange in the book; note numbers in muted
+  ink, and notes side by side read "1, 2". The EPUB's drawn cover and title
+  page follow (the contents are on the title page), and summaries end at a
+  sentence. The app's own page uses the same quiet ink instead of orange.
+
 ## 1.0.0 — 2026-10-09
 
 First release. Submitted to the Chrome Web Store on 2026-10-09; also published
