@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.0 — 2026-10-18
 
 - A quieter look, like a literary review rather than a newspaper: the contents
   are the cover (a line with the dates, the number of essays and the reading
@@ -10,6 +10,10 @@
   ink, and notes side by side read "1, 2". The EPUB's drawn cover and title
   page follow (the contents are on the title page), and summaries end at a
   sentence. The app's own page uses the same quiet ink instead of orange.
+- Typeface: Charter (as before), Palatino, Baskerville, Iowan Old Style,
+  Georgia or a sans serif, for the PDF, the HTML file, the EPUB (as its
+  publisher font) and its drawn cover. Each falls back to the nearest face on
+  Windows and Linux.
 
 ## 1.0.0 — 2026-10-09
 

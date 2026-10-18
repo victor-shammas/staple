@@ -3,6 +3,7 @@ import {
   listPosts, mapLimit, normalizeBase, originPattern, readingMinutes, resolvePublication, summarize,
 } from './lib/substack.js';
 import { SUPPORT_URL } from './lib/config.js';
+import { DEFAULT_TYPEFACE, TYPEFACES } from './lib/fonts.js';
 import { showRateLimitNotices } from './lib/notice.js';
 import { el, fmtDate, fmtHours, fmtNumber, fmtRange } from './lib/format.js';
 
@@ -16,6 +17,7 @@ const DEFAULT_SETTINGS = {
   order: 'newest',
   pageSize: /^en-(US|CA)$/.test(navigator.language) ? 'letter' : 'a4',
   imageScale: 100,
+  typeface: DEFAULT_TYPEFACE,
 };
 
 const state = {
@@ -653,6 +655,7 @@ async function makeBook(format) {
     order: $('order').value,
     pageSize: $('page-size').value,
     imageScale: Number($('image-scale').value),
+    typeface: $('typeface').value,
   });
   save();
   const title = $('title').value.trim() || 'Collected Reading';
@@ -664,6 +667,7 @@ async function makeBook(format) {
     order: state.settings.order,
     pageSize: state.settings.pageSize,
     imageScale: state.settings.imageScale,
+    typeface: state.settings.typeface,
     includePreviews: state.settings.includePreviews,
     posts: chosen.map(({ selected, access, reason, ...rest }) => rest),
     createdAt: Date.now(),
@@ -713,6 +717,8 @@ async function init() {
   $('order').value = state.settings.order;
   $('page-size').value = state.settings.pageSize;
   $('image-scale').value = String(state.settings.imageScale);
+  $('typeface').replaceChildren(...Object.entries(TYPEFACES).map(([key, t]) => el('option', { value: key, text: t.label })));
+  $('typeface').value = TYPEFACES[state.settings.typeface] ? state.settings.typeface : DEFAULT_TYPEFACE;
   setRange(7);
   renderSources();
   if (state.importedAt) {

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Staple",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Staple a week of Substack essays into one PDF, EPUB or HTML file — free posts, plus paid ones you already subscribe to.",
   "homepage_url": "https://victorshammas.com/staple/",
   "minimum_chrome_version": "131",

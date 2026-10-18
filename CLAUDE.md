@@ -50,7 +50,11 @@ publications in muted small capitals, hairlines between entries, no accent
 colour in the book; adjacent footnote anchors get `footnote-next` (a comma).
 The EPUB's title page holds the contents (`contentsPage` may be null in
 `buildEpub`); its drawn cover lists the titles too. The app's UI uses one ink
-for actions (`--accent` is ink, not orange).
+for actions (`--accent` is ink, not orange). Typeface (1.1.0): `lib/fonts.js`
+`TYPEFACES`, each a stack with Windows/Linux fallbacks; `job.typeface` sets
+`--serif` in the book and the HTML file, `body { font-family }` in the EPUB
+(a publisher font) and the drawn cover. Store screenshots and promo tiles are
+made in headless Chrome from a stubbed `chrome.*` (2026-10-18; not in the repo).
 
 ## Conventions
 

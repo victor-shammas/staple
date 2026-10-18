@@ -5,6 +5,7 @@ import { exportEpub } from './lib/epub-export.js';
 import { exportHtml } from './lib/html-export.js';
 import { SUPPORT_URL } from './lib/config.js';
 import { el, fmtDate, fmtHours, fmtNumber, fmtRange, summary } from './lib/format.js';
+import { typefaceStack } from './lib/fonts.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -231,6 +232,7 @@ async function main() {
   $('page-size').textContent = pageCss;
   document.documentElement.style.setProperty('--img-scale', `${job.imageScale || 100}%`);
   document.documentElement.style.setProperty('--img-k', String((job.imageScale || 100) / 100));
+  document.documentElement.style.setProperty('--serif', typefaceStack(job.typeface));
   $('hint').innerHTML = {
     pdf: 'In the print dialog, choose <b>Save as PDF</b> and, under <i>More settings</i>, untick <b>Headers and footers</b>.',
     epub: 'The EPUB downloads automatically. Open it in Apple Books, Kobo or Calibre, or send it to your Kindle.',
@@ -306,6 +308,7 @@ async function main() {
       language: languages[0] || 'en',
       description: `${range}: ${articles.map((a) => a.title).join(' · ')}`,
       imageScale: job.imageScale,
+      typeface: typefaceStack(job.typeface),
     }, status);
   } else {
     blob = await exportHtml(parts, {
@@ -313,6 +316,7 @@ async function main() {
       language: languages[0] || 'en',
       pageCss,
       imageScale: job.imageScale,
+      typeface: typefaceStack(job.typeface),
     }, status);
   }
   const filename = `${safeFilename(document.title)}.${format}`;

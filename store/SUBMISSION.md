@@ -1,11 +1,11 @@
 # Staple — Chrome Web Store submission kit
 
-Everything needed to publish Staple 1.0.0. Work through the checklist in
+Everything needed to publish Staple (1.0.0 first; 1.1.0 is the current package). Work through the checklist in
 order; the text to paste is below it.
 
 | File | Use |
 |---|---|
-| `staple-1.0.0.zip` | The package you upload |
+| `staple-1.1.0.zip` | The package you upload (`staple-1.0.0.zip`: the first release) |
 | `screenshots/*.png` (1280×800) | Listing screenshots, in numbered order |
 | `promo-small-440x280.png` | Small promo tile (required) |
 | `promo-marquee-1400x560.png` | Marquee promo tile (optional) |
@@ -73,6 +73,7 @@ FEATURES
 • Date range and minimum length filters, so you get essays rather than notes.
 • Clean reading: subscribe buttons and share widgets removed; tweets, videos and embedded posts turned into tidy quotes and links; footnotes kept and linked.
 • Image size: full width, 75%, 50%, 25% or none — smaller sizes make smaller files.
+• Typeface: Charter, Palatino, Baskerville, Iowan Old Style, Georgia or a sans serif.
 • Every post links back to the original so you can like, comment and restack.
 
 PRIVATE BY DESIGN

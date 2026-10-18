@@ -33,7 +33,8 @@ Be signed in to substack.com in the same Chrome profile if you want
    length (default 400 words). Podcasts, threads and short notes are skipped.
 3. **Posts** — tick what you want. Paid posts are checked for access.
 4. **Make PDF / EPUB / HTML** — pick image size (full width, 75%, 50%, 25% or
-   none; smaller sizes also download smaller files), then:
+   none; smaller sizes also download smaller files) and a typeface (Charter,
+   Palatino, Baskerville, Iowan Old Style, Georgia or a sans serif), then:
    - **PDF** opens the book and the print dialog. Choose **Save as PDF**; under
      *More settings*, untick **Headers and footers**.
    - **EPUB** downloads a `.epub` (cover, contents, one chapter per post, images
