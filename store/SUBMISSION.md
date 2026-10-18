@@ -1,11 +1,11 @@
 # Staple — Chrome Web Store submission kit
 
-Everything needed to publish Staple (1.0.0 first; 1.1.0 is the current package). Work through the checklist in
+Everything needed to publish Staple (1.0.0 first; 1.1.1 is the current package). Work through the checklist in
 order; the text to paste is below it.
 
 | File | Use |
 |---|---|
-| `staple-1.1.0.zip` | The package you upload (`staple-1.0.0.zip`: the first release) |
+| `staple-1.1.1.zip` | The package you upload (`staple-1.0.0.zip`: the first release) |
 | `screenshots/*.png` (1280×800) | Listing screenshots, in numbered order |
 | `promo-small-440x280.png` | Small promo tile (required) |
 | `promo-marquee-1400x560.png` | Marquee promo tile (optional) |

@@ -5,7 +5,7 @@ import {
 import { SUPPORT_URL } from './lib/config.js';
 import { DEFAULT_TYPEFACE, TYPEFACES } from './lib/fonts.js';
 import { showRateLimitNotices } from './lib/notice.js';
-import { el, fmtDate, fmtHours, fmtNumber, fmtRange } from './lib/format.js';
+import { el, fmtDate, fmtHours, fmtNumber, fmtRange, summary } from './lib/format.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -610,7 +610,20 @@ function renderPosts() {
   renderSummary();
 }
 
+// The first chosen post's title and subtitle, set in the chosen typeface, so the names mean something.
+function renderTypefaceSample() {
+  const face = TYPEFACES[$('typeface').value] || TYPEFACES[DEFAULT_TYPEFACE];
+  const post = state.posts.find((p) => p.selected && selectable(p));
+  const sample = $('typeface-sample');
+  sample.style.fontFamily = face.stack;
+  sample.replaceChildren(
+    post ? post.title : 'A week of essays, stapled into one collection.',
+    el('small', { text: post?.subtitle ? summary(post.subtitle, 140) : `${face.label}: the text of every essay will look like this.` }),
+  );
+}
+
 function renderSummary() {
+  renderTypefaceSample();
   const chosen = state.posts.filter((p) => p.selected && selectable(p));
   const words = chosen.reduce((n, p) => n + (p.access === 'preview' ? p.previewWords || 0 : p.wordcount), 0);
   $('summary').textContent = chosen.length
@@ -717,7 +730,9 @@ async function init() {
   $('order').value = state.settings.order;
   $('page-size').value = state.settings.pageSize;
   $('image-scale').value = String(state.settings.imageScale);
-  $('typeface').replaceChildren(...Object.entries(TYPEFACES).map(([key, t]) => el('option', { value: key, text: t.label })));
+  // Each name in its own face where the menu can show it (Windows, Linux); the sample line below shows it everywhere.
+  $('typeface').replaceChildren(...Object.entries(TYPEFACES).map(([key, t]) => el('option', { value: key, text: t.label, style: `font-family: ${t.stack}` })));
+  $('typeface').addEventListener('change', renderTypefaceSample);
   $('typeface').value = TYPEFACES[state.settings.typeface] ? state.settings.typeface : DEFAULT_TYPEFACE;
   setRange(7);
   renderSources();

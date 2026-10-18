@@ -53,7 +53,8 @@ The EPUB's title page holds the contents (`contentsPage` may be null in
 for actions (`--accent` is ink, not orange). Typeface (1.1.0): `lib/fonts.js`
 `TYPEFACES`, each a stack with Windows/Linux fallbacks; `job.typeface` sets
 `--serif` in the book and the HTML file, `body { font-family }` in the EPUB
-(a publisher font) and the drawn cover. Store screenshots and promo tiles are
+(a publisher font) and the drawn cover; the app shows a sample line
+(`renderTypefaceSample`: the first chosen post's title and subtitle in that face). Store screenshots and promo tiles are
 made in headless Chrome from a stubbed `chrome.*` (2026-10-18; not in the repo).
 
 ## Conventions

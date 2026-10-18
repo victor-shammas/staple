@@ -91,12 +91,31 @@ main {
 }
 .card-head h2 { margin: 0; }
 /* Step numbers as a journal numbers its sections: quiet old-style figures. */
+/* The step numbers in quiet circles: ink on the paper tone, not the old orange. */
 .step {
-  color: var(--muted);
-  font: italic 400 1.05rem/1 var(--serif);
-  font-variant-numeric: oldstyle-nums;
-  min-width: .8em;
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--ink);
+  font: 600 .78rem/1 var(--sans);
+  font-variant-numeric: lining-nums tabular-nums;
 }
+
+/* The chosen typeface, shown on a line of the collection itself. */
+.typeface-sample {
+  margin: 4px 0 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  background: var(--field);
+  color: var(--ink);
+  font-size: 19px;
+  line-height: 1.4;
+}
+.typeface-sample small { display: block; margin-top: 4px; font-size: 15px; font-style: italic; color: var(--muted); }
 
 button { font: inherit; cursor: pointer; }
 button:disabled { cursor: default; opacity: .5; }

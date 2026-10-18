@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 — 2026-10-18
+
+- The step numbers are in circles again (in ink on the paper tone, not orange).
+- The typeface menu has a sample line beneath it: the first chosen essay's
+  title and subtitle in that face, so the names mean something.
+
 ## 1.1.0 — 2026-10-18
 
 - A quieter look, like a literary review rather than a newspaper: the contents
